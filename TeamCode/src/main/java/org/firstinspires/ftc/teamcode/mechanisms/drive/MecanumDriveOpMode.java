@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mechanisms.drive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class MecanumDriveOpMode extends OpMode {
-    private final MecanumDrive drive = new MecanumDrive();
+    private final Drive drive = new Drive();
 
     @Override
     public void init() {

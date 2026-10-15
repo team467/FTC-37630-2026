@@ -2,24 +2,27 @@ package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
 import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.CURRENT_LIMIT;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
-public class Shooter {
+public class Shooter extends SubsystemBase {
 
-    private DcMotor shooterMotor;
+    private Motor shooterMotor;
 
     public void init(HardwareMap hardwareMap) {
-        shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
-        shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        shooterMotor = new Motor(hardwareMap, "shooterMotor");
+        shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
+        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
     }
 
     public void start() {
-        shooterMotor.setPower(CURRENT_LIMIT);
+        shooterMotor.set(CURRENT_LIMIT);
     }
 
     public void stop() {
-        shooterMotor.setPower(0.0);
+        shooterMotor.set(0.0);
     }
 }

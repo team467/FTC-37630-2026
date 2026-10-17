@@ -12,14 +12,23 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.Arrays;
+
 @TeleOp(name = "intake OpMode")
 public class intakeOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
-                double driverInput = -gamepad1.left_stick_x;
-        LEFT_SERVO_PORT. = (driverInput);
-        RIGHT_SERVO_PORT. = (driverInput);
+        Servo leftServo = hardwareMap.get(Servo.class, "left_servo");
+        Servo rightServo = hardwareMap.get(Servo.class, "right_servo");
+        while (opModeIsActive()) {
+            double driverInput;
+            driverInput = -gamepad1.left_stick_x;
+            for (Servo servo : Arrays.asList(leftServo, rightServo)) {
+                servo.setPosition(driverInput);
+            }
         }
-    }
+        }
 
+
+        }
 

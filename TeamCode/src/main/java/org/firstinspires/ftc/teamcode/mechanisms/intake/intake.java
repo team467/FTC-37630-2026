@@ -6,26 +6,31 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class intake{
-    public static void main (String[] args) {
-        DcMotor leftMotor;
-        DcMotor rightMotor;
-        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
-        rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
-        {
-            leftMotor.setPower(1.0);
-            rightMotor.setPower(-1.0);
-            {
-              double driverInput = -gamepad1.left_stick_y;
-              leftMotor.setPower(driverInput);
-              rightMotor.setPower(driverInput);
-                }
-                }
-                }
-            }
+public class intake {
+        DcMotor intakeMotor = null;
+        Servo leftServo = null;
+        Servo rightServo = null;
+
+        public void start(){
+            leftServo = hardwareMap.get(Servo.class, "leftServo");
+            rightServo = hardwareMap.get(Servo.class, "rightServo" );
+            intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+            intakeMotor.setPower(1.0);
+            leftServo.setPosition(1.0);
+            rightServo.setPosition(1.0);
+        }
+        public void stop() {
+            leftServo.setPosition(0.0);
+            rightServo.setPosition(0.0);
+        }
 
 
+    setPower
+
+
+    }
 
 
 

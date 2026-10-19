@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 public class Intake2 {
-    private ServoEx leftServo;
-    private ServoEx rightServo;
+    private ServoEx leftintakeServo;
+    private ServoEx rightintakeServo;
     private DcMotor intakeMotor;
 
     public Intake2(HardwareMap hwMap) {
 
-        leftServo = (ServoEx) hwMap.get(Servo.class, "leftServo");
-        rightServo = (ServoEx) hwMap.get(Servo.class, "rightServo");
+        leftintakeServo = (ServoEx) hwMap.get(Servo.class, "leftintakeServo");
+        rightintakeServo = (ServoEx) hwMap.get(Servo.class, "rightintakeServo");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
     }
 
@@ -26,7 +26,7 @@ public class Intake2 {
     }
 
     public void servoControl(double position) {
-        leftServo.set(position);
-        rightServo.set(-position);
+        leftintakeServo.set(position);
+        rightintakeServo.set(-position);
     }
 }

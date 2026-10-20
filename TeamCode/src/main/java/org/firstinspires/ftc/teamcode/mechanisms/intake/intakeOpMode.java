@@ -26,7 +26,12 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
         }
         if (gamepad1.right_bumper){
             intake.servoControl(1.0);
-        }}
+        }
+        if (gamepad1.b) {
+            intake.stop();
+        }
+        }
+        }
         }
 
 

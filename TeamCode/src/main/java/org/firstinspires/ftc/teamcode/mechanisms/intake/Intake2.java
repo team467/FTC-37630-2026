@@ -27,7 +27,9 @@ public class Intake2 extends SubsystemBase {
     public void dcControl(double power) {
         intakeMotor.set(1.0);
     }
-
+public void stop(){
+        intakeMotor.set(0.0);
+}
     public void servoControl(double position) {
         leftServo.set(position);
         rightServo.set(-position);

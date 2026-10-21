@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mechanisms.intake;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.opencv.core.Core.min;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,8 +31,11 @@ public class Intake2 extends SubsystemBase {
 public void stop(){
         intakeMotor.set(0.0);
 }
+    ServoEx speedServo = new ServoEx(hardwareMap, "speed_servo", 0.0, 300.0);
     public void servoControl(double position) {
-        leftServo.set(position);
-        rightServo.set(-position);
+        ServoEx leftServo = new ServoEx(hardwareMap,"leftintakeServo", 0.0 ,300.0);
+                ServoEx rightServo = new ServoEx(hardwareMap, "rightintakeServo", 0.0,300.0);
+        leftServo.set(0.0);
+        rightServo.set(300.0);
     }
 }

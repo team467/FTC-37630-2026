@@ -34,5 +34,3 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
         }
         }
 
-
-        }

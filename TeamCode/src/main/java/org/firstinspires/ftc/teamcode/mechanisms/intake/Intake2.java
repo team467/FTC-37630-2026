@@ -12,7 +12,6 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.SimpleServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
-
 public class Intake2 extends SubsystemBase {
     private ServoEx leftServo;
     private ServoEx rightServo;

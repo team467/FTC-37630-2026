@@ -24,7 +24,7 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
         if (gamepad1.x) {
             intake.dcControl(1.0);
         }
-        if (gamepad1.right_bumper){
+        if (gamepad1.left_bumper){
             intake.servoControl(1.0);
         }
         if (gamepad1.b) {

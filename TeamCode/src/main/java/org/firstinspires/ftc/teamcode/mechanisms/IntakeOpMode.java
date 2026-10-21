@@ -1,34 +1,28 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 @TeleOp(name = "Intake OpMode")
-public class IntakeOpMode extends OpMode {
-
-    private Intake intake = new Intake();
-    private GamepadEx gamepadEx;
-
-    @Override
-    public void init() {
-        intake.init(hardwareMap);
-        gamepadEx = new GamepadEx(gamepad1);
-    }
+public class IntakeOpMode extends CommandOpMode {
+    private Intake intake;
+    private GamepadEx driverOp;
 
     @Override
-    public void loop() {
-        gamepadEx.readButtons();
+    public void initialize() {
+        intake = new Intake(hardwareMap);
 
-        if (gamepadEx.getButton(GamepadKeys.Button.A)) {
-            intake.dcControl(1);
-        }
+        driverOp = new GamepadEx(gamepad1);
 
-        if (gamepadEx.getButton(GamepadKeys.Button.B)) {
-            intake.servoControl(1);
-        }
+        driverOp.getGamepadButton(GamepadKeys.Button.A)
+                .whileHeld(new InstantCommand(intake::runMotor, intake))
+                .whenReleased(new InstantCommand(intake::stopMotor, intake));
+
+        driverOp.getGamepadButton(GamepadKeys.Button.B)
+                .whileHeld(new InstantCommand(intake::runServos, intake))
+                .whenReleased(new InstantCommand(intake::stopServos, intake));
     }
 }
-
-

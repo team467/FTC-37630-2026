@@ -4,42 +4,42 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.CRServoEx;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
-import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
+    private Motor intakeMotor;
 
-    // one DC motor
-    private MotorEx intakeMotor;
-
-    // two continuous rotation servos
     private CRServoEx leftIntakeServo;
     private CRServoEx rightIntakeServo;
 
-    public void init(HardwareMap hardwareMap) {
-
-        // make the DC motor
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+    public Intake(HardwareMap hardwareMap) {
+        intakeMotor = new Motor(hardwareMap, IntakeConstants.motorName);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
-        // make the two servos
-        leftIntakeServo = new CRServoEx(hardwareMap, "leftIntakeServo");
-        rightIntakeServo = new CRServoEx(hardwareMap, "rightIntakeServo");
+        leftIntakeServo = new CRServoEx(hardwareMap, IntakeConstants.leftServoName);
+        rightIntakeServo = new CRServoEx(hardwareMap, IntakeConstants.rightServoName);
 
-        // flip the left servo so both servos spin the same way
         leftIntakeServo.setInverted(true);
     }
-    
-    // dcControl -> takes in power
-    // servoControl -> takes in position
 
-    public void servoControl(double servoPower) {
-        
-        leftIntakeServo.set(servoPower);
-        rightIntakeServo.set(servoPower);
+    public void runMotor() {
+        intakeMotor.set(IntakeConstants.motorPower);
     }
-    
-    public void dcControl(double dcPower) {
-        
-        intakeMotor.set(dcPower);
+
+    public void stopMotor() {
+        intakeMotor.stopMotor();
+    }
+
+    public void runServos() {
+        leftIntakeServo.set(IntakeConstants.servoPower);
+        rightIntakeServo.set(IntakeConstants.servoPower);
+    }
+
+    public void stopServos() {
+        leftIntakeServo.set(0);
+        rightIntakeServo.set(0);
+    }
+
+    @Override
+    public void periodic() {
     }
 }

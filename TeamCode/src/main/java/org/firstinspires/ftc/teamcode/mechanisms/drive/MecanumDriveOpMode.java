@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp (name = "Drive OpMode")
 public class MecanumDriveOpMode extends OpMode {
     private final Drive drive = new Drive();
 

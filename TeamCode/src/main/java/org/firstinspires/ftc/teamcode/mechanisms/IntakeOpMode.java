@@ -8,7 +8,7 @@ public class IntakeOpMode extends OpMode {
     private Intake intake;
 
     private boolean motorOn = false;
-    private boolean servosOpen = false;
+    private boolean servosOn = false;
 
     private boolean lastA = false;
     private boolean lastLeftBumper = false;
@@ -28,7 +28,7 @@ public class IntakeOpMode extends OpMode {
         }
 
         if (leftBumper && !lastLeftBumper) {
-            servosOpen = !servosOpen;
+            servosOn = !servosOn;
         }
 
         lastA = a;
@@ -40,14 +40,14 @@ public class IntakeOpMode extends OpMode {
             intake.stopMotor();
         }
 
-        if (servosOpen) {
-            intake.openServos();
+        if (servosOn) {
+            intake.runServos();
         } else {
-            intake.closeServos();
+            intake.stopServos();
         }
 
         telemetry.addData("Motor On", motorOn);
-        telemetry.addData("Servos Open", servosOpen);
+        telemetry.addData("Servos On", servosOn);
         telemetry.update();
     }
 }

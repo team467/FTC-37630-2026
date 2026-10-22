@@ -24,7 +24,6 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
             if (gamepad1.x) {
                 intake.dcControl(1.0);
             }
-            while (opModeIsActive()) {
                 if (gamepad1.left_bumper) {
                     // intake.servoControl(1.0);
                     intake.servoControl(300.0);
@@ -32,7 +31,6 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
                 if (gamepad1.b) {
                     intake.stop();
                 }
-            }
         }
     }
 }

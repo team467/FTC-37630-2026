@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
     @Override
     public void runOpMode() {
         intake.init(hardwareMap);
+        Intake2 intake = new Intake2();
+        intake.init(hardwareMap);
 
         waitForStart();
 

@@ -2,55 +2,52 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.seattlesolvers.solverslib.gamepad.GamepadEx;
-import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
-
-import org.firstinspires.ftc.teamcode.mechanisms.drive.Drive;
 
 @TeleOp(name = "Intake OpMode")
 public class IntakeOpMode extends OpMode {
     private Intake intake;
-    private Drive drive;
-    private GamepadEx driverOp;
+
+    private boolean motorOn = false;
+    private boolean servosOn = false;
+
+    private boolean lastA = false;
+    private boolean lastLeftTrigger = false;
 
     @Override
     public void init() {
-        // Make the intake (1 motor and 2 servos)
         intake = new Intake(hardwareMap);
-
-        // Make the drive (same as the Drive OpMode)
-        drive = new Drive();
-        drive.init(hardwareMap);
-
-        // Make the gamepad
-        driverOp = new GamepadEx(gamepad1);
     }
 
     @Override
     public void loop() {
-        // Drive with the sticks (same buttons as before)
-        drive.driveFieldRelative(
-                gamepad1.left_stick_y,
-                gamepad1.left_stick_x,
-                gamepad1.right_stick_x
-        );
+        boolean a = gamepad1.a;
+        boolean leftTrigger = gamepad1.left_trigger > 0.5;
 
-        // Hold A to run the intake motor
-        if (driverOp.getButton(GamepadKeys.Button.A)) {
+        if (a && !lastA) {
+            motorOn = !motorOn;
+        }
+
+        if (leftTrigger && !lastLeftTrigger) {
+            servosOn = !servosOn;
+        }
+
+        lastA = a;
+        lastLeftTrigger = leftTrigger;
+
+        if (motorOn) {
             intake.runMotor();
         } else {
             intake.stopMotor();
         }
 
-        // Hold the left trigger (L2) to run the servos
-        double leftTrigger = driverOp.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
-        if (leftTrigger > 0.5) {
+        if (servosOn) {
             intake.runServos();
         } else {
             intake.stopServos();
         }
 
-        telemetry.addData("Left Trigger", leftTrigger);
+        telemetry.addData("Motor On", motorOn);
+        telemetry.addData("Servos On", servosOn);
         telemetry.update();
     }
 }

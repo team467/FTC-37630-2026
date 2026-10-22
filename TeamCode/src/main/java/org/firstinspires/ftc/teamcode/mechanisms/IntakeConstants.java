@@ -6,6 +6,6 @@ public class IntakeConstants {
     public static double servoPower = 1.0;
 
     public static String motorName = "intakeMotor";
-    public static String leftServoName = "leftIntakeServo";
-    public static String rightServoName = "rightIntakeServo";
+    public static String leftServoName = "leftintakeServo";
+    public static String rightServoName = "rightintakeServo";
 }

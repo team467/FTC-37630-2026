@@ -11,7 +11,7 @@ public class IntakeOpMode extends OpMode {
     private boolean servosOn = false;
 
     private boolean lastA = false;
-    private boolean lastLeftTrigger = false;
+    private boolean lastLeftBumper = false;
 
     @Override
     public void init() {
@@ -21,18 +21,18 @@ public class IntakeOpMode extends OpMode {
     @Override
     public void loop() {
         boolean a = gamepad1.a;
-        boolean leftTrigger = gamepad1.left_trigger > 0.5;
+        boolean leftBumper = gamepad1.left_bumper;
 
         if (a && !lastA) {
             motorOn = !motorOn;
         }
 
-        if (leftTrigger && !lastLeftTrigger) {
+        if (leftBumper && !lastLeftBumper) {
             servosOn = !servosOn;
         }
 
         lastA = a;
-        lastLeftTrigger = leftTrigger;
+        lastLeftBumper = leftBumper;
 
         if (motorOn) {
             intake.runMotor();

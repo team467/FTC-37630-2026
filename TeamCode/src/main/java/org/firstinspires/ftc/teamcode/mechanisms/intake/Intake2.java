@@ -25,7 +25,7 @@ public void stop(){
         intakeMotor.set(0.0);
 }
     public void servoControl(double power) {
-        leftintakeServo.setPower(power);
-        rightintakeServo.setPower(-power);
+        leftintakeServo.setPower(1.0);
+        rightintakeServo.setPower(-1.0);
     }
 }

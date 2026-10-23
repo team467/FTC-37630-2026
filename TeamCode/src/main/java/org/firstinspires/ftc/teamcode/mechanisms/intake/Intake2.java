@@ -8,8 +8,8 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.CRServoEx;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 public class Intake2 extends SubsystemBase {
-    private CRServo leftintakeServo;
-    private CRServo rightintakeServo;
+    public CRServo leftintakeServo;
+    public CRServo rightintakeServo;
     private Motor intakeMotor;
 
     public void init(HardwareMap hwMap) {
@@ -30,5 +30,11 @@ public void stop(){
     }
 
     public void servoStop() {
+    }
+
+    public void leftintakeServo(double speed) {
+    }
+
+    public void rightintakeServo(double speed) {
     }
 }

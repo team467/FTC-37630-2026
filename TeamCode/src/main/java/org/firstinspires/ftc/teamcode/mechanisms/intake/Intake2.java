@@ -28,4 +28,7 @@ public void stop(){
         leftintakeServo.setPower(1.0);
         rightintakeServo.setPower(-1.0);
     }
+
+    public void servoStop() {
+    }
 }

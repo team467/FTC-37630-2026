@@ -19,11 +19,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
             if (gamepad1.x) {
                 intake.dcControl(1.0);
             }
-                if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper) {
+                intake.servoControl(1.0); // Full speed forward continuously while held
+            } else if (gamepad1.a) {
+                intake.servoControl(-1.0); // Full speed reverse continuously while held (Optional)
+            } else {
+                intake.servoStop();
+               // if (gamepad1.left_bumper) {
                     // intake.servoControl(1.0);
-                    intake.servoControl(300.0);
+                    //intake.servoControl(300.0);
                 }
-                if (gamepad1.b) {
+                //if (gamepad1.b) {
                     intake.stop();
                 }
         }

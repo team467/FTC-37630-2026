@@ -5,13 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "IndexerOpMode", group = "TeleOp")
 public class IndexerOpMode extends OpMode {
-    Indexer main = new Indexer();
+    Indexer indexer = new Indexer();
 
     @Override
-    public void init() {}
+    public void init() {
+        indexer.init(hardwareMap);
+    }
 
     @Override
     public void loop() {
-        main.IndexerLoop(gamepad1.y);
+        indexer.indexerLoop(gamepad1.y);
     }
 }

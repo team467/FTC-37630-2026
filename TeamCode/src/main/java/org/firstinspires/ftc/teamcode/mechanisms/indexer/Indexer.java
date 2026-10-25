@@ -2,18 +2,19 @@ package org.firstinspires.ftc.teamcode.mechanisms.indexer;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
+import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 
 public class Indexer {
-    private ServoEx windmillServo;
+    private CRServo windmillServo;
+    double NextPos;
     public void init(HardwareMap hwMap) {
-        ServoEx windmillServo = new ServoEx(hwMap, "windmillServo");
+        windmillServo = new CRServo(hwMap, "windmillServo");
     }
-    public void IndexerLoop(boolean On) {
+    public void indexerLoop(boolean on) {
         telemetry.addData("Measured Servo Position", windmillServo.get()); // Debug Tool
-        if (On) {
-            if (windmillServo.get() == 0.00d) {windmillServo.set(1.00);}
-            else {windmillServo.set(0.00);}
+        if (on) {
+            NextPos = (windmillServo.get() + 0.51d) - Math.floor(windmillServo.get() + 0.51d);
+            windmillServo.set(NextPos);
         }
     }
 }

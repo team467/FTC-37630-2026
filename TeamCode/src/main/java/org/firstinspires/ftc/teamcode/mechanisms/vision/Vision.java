@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.mechanisms.vision;
 
 import android.util.Size;
 
@@ -48,8 +48,7 @@ public final class Vision implements AutoCloseable {
         AprilTagDetection best = null;
 
         for (AprilTagDetection detection : detections) {
-            if (detection.metadata == null
-                    || detection.ftcPose == null) {
+            if (detection.ftcPose == null) {
                 continue;
             }
 

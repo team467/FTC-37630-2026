@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.vision.Vision;
+import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 
 @TeleOp(name = "Drive + Vision")
 public class MecanumDriveOpMode extends OpMode {
@@ -41,7 +43,6 @@ public class MecanumDriveOpMode extends OpMode {
         AprilTagDetection target = vision.getBestDetection();
 
         if (!gamepad1.a) {
-            // Preserve the existing manual drive controls.
             drive.driveFieldRelative(
                     gamepad1.left_stick_y,
                     gamepad1.left_stick_x,
@@ -49,11 +50,13 @@ public class MecanumDriveOpMode extends OpMode {
             );
 
             telemetry.addData("Mode", "MANUAL");
+
         } else if (target == null) {
-            // Never continue approaching without a visible target.
             drive.driveFieldRelative(0, 0, 0);
+
             telemetry.addData("Mode", "AUTO: SEARCH");
             telemetry.addLine("No valid AprilTag detected");
+
         } else {
             double bearing = target.ftcPose.bearing;
             double distance = target.ftcPose.range;
@@ -61,7 +64,6 @@ public class MecanumDriveOpMode extends OpMode {
             double rotation = 0.0;
             double forward = 0.0;
 
-            // Center the target horizontally.
             if (Math.abs(bearing) > BEARING_TOLERANCE_DEG) {
                 rotation = Range.clip(
                         -ROTATION_KP * bearing,
@@ -70,10 +72,9 @@ public class MecanumDriveOpMode extends OpMode {
                 );
             }
 
-            // Approach only when the target is nearly centered.
             if (Math.abs(bearing) <= 8.0
                     && distance > TARGET_DISTANCE_IN
-                            + DISTANCE_TOLERANCE_IN) {
+                    + DISTANCE_TOLERANCE_IN) {
 
                 forward = Range.clip(
                         FORWARD_KP
@@ -83,11 +84,26 @@ public class MecanumDriveOpMode extends OpMode {
                 );
             }
 
-            // Stop advancing inside the distance tolerance.
             drive.driveFieldRelative(forward, 0, rotation);
 
             telemetry.addData("Mode", "AUTO: ALIGN");
-            telemetry.addData("Tag ID", target.id);
+
+            if (target instanceof AprilTagSingleDetection) {
+                AprilTagSingleDetection single =
+                        (AprilTagSingleDetection) target;
+
+                telemetry.addData("Tag ID", single.id);
+
+            } else if (target instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection cluster =
+                        (AprilTagClusterDetection) target;
+
+                telemetry.addData(
+                        "Tag Cluster",
+                        cluster.metadata.name
+                );
+            }
+
             telemetry.addData("Bearing (deg)", "%.2f", bearing);
             telemetry.addData("Distance (in)", "%.2f", distance);
             telemetry.addData("Forward", "%.2f", forward);

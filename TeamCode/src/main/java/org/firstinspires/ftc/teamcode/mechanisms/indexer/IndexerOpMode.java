@@ -9,7 +9,7 @@ public class IndexerOpMode extends OpMode {
 
     @Override
     public void init() {
-        indexer.init(hardwareMap);
+        indexer.init(hardwareMap, this.telemetry);
     }
 
     @Override

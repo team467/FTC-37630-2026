@@ -32,9 +32,9 @@ public class    Intake extends SubsystemBase {
         rightIntakeServo.set(-IntakeConstants.servoPower);
     }
 
-    public void stopServos() {
-        leftIntakeServo.set(0);
-        rightIntakeServo.set(0);
+    public void reverseServos() {
+        leftIntakeServo.set(IntakeConstants.servoReversePower);
+        rightIntakeServo.set(IntakeConstants.servoReversePower);
     }
 
     @Override

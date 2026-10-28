@@ -46,7 +46,7 @@ public class IntakeOpMode extends OpMode {
         if (servosOn) {
             intake.runServos();
         } else {
-            intake.stopServos();
+            intake.reverseServos();
         }
 
         telemetry.addData("Motor On", motorOn);

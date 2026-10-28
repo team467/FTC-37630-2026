@@ -29,7 +29,7 @@ public class    Intake extends SubsystemBase {
 
     public void runServos() {
         leftIntakeServo.set(IntakeConstants.servoPower);
-        rightIntakeServo.set(IntakeConstants.servoPower);
+        rightIntakeServo.set(-IntakeConstants.servoPower);
     }
 
     public void stopServos() {

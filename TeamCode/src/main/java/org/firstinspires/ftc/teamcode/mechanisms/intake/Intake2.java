@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanisms.intake;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.hardware.motors.CRServoEx;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 public class Intake2 extends SubsystemBase {
     public CRServo leftintakeServo;
@@ -28,7 +24,6 @@ public void stop(){
         leftintakeServo.setPower(1.0);
         rightintakeServo.setPower(-1.0);
     }
-
     public void servoStop() {
     }
 

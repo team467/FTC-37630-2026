@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mechanisms;
+package org.firstinspires.ftc.teamcode.mechanisms.intake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;

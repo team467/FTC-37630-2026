@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.mechanisms;
+package org.firstinspires.ftc.teamcode.mechanisms.intake;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-// ALL Y CODE IS FOR SEPERATING INTAKE TOGGLE AND SERVOS
 
 @TeleOp(name = "Intake OpMode")
 public class IntakeOpMode extends OpMode {
@@ -13,7 +11,6 @@ public class IntakeOpMode extends OpMode {
     private boolean servosOn = false;
 
     private boolean lastA = false;
-    // private boolean lastY = false;
 
     @Override
     public void init() {
@@ -23,19 +20,14 @@ public class IntakeOpMode extends OpMode {
     @Override
     public void loop() {
         boolean a = gamepad1.a;
-        // boolean y = gamepad1.y;
 
         if (a && !lastA) {
             motorOn = !motorOn;
+
             servosOn = !servosOn;
         }
 
-        /* if (y && !lastY) {
-            servosOn = !servosOn;
-        } */
-
         lastA = a;
-        // lastY = y;
 
         if (motorOn) {
             intake.runMotor();

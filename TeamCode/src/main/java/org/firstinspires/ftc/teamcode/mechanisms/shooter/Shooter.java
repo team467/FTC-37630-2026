@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
-import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.CURRENT_LIMIT;
+package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -11,18 +10,19 @@ public class Shooter extends SubsystemBase {
     private Motor shooterMotor;
 
     public void init(HardwareMap hardwareMap) {
-
         shooterMotor = new Motor(hardwareMap, "shooterMotor");
-        shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
-        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
+        shooterMotor.setRunMode(Motor.RunMode.RawPower);
+        shooterMotor.setZeroPowerBehavior(
+                Motor.ZeroPowerBehavior.BRAKE
+        );
     }
 
     public void start() {
-        shooterMotor.set(CURRENT_LIMIT);
+        shooterMotor.set(ShooterConstants.CURRENT_LIMIT);
     }
 
     public void stop() {
-        shooterMotor.set(0.0);
+        shooterMotor.stopMotor();
     }
 }

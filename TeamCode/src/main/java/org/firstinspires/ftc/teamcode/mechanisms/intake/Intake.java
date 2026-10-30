@@ -5,7 +5,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
-public class    Intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
     private Motor intakeMotor;
 
     private CRServo leftIntakeServo;
@@ -30,6 +30,11 @@ public class    Intake extends SubsystemBase {
     public void runServos() {
         leftIntakeServo.set(IntakeConstants.servoPower);
         rightIntakeServo.set(-IntakeConstants.servoPower);
+    }
+
+    public void stopServos() {
+        leftIntakeServo.set(0);
+        rightIntakeServo.set(0);
     }
 
     public void reverseServos() {

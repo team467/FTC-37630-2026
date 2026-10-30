@@ -42,10 +42,11 @@ public class SuperOpMode extends OpMode {
 
     @Override
     public void loop() {
-        // Driving
+
+        // Field-centric driving
         drive.driveFieldRelative(
                 -gamepad1.left_stick_y,
-                gamepad1.left_stick_x,
+                -gamepad1.left_stick_x,
                 gamepad1.right_stick_x
         );
 
@@ -66,7 +67,7 @@ public class SuperOpMode extends OpMode {
             intake.stopServos();
         }
 
-        // Shooter toggle: right bumper
+        // Shooter toggle: Right bumper
         if (gamepad1.right_bumper && !lastRightBumper) {
             shooterOn = !shooterOn;
 
@@ -82,22 +83,48 @@ public class SuperOpMode extends OpMode {
 
         lastRightBumper = gamepad1.right_bumper;
 
-        // Indexer: X runs only after shooter spin-up delay
+        // Shooter spin-up delay
         boolean shooterReady =
                 shooterOn
                         && shooterTimerStarted
                         && shooterTimer.seconds() >= SHOOTER_SPINUP_SECONDS;
 
+        // Indexer: X
         indexer.indexerLoop(gamepad1.x && shooterReady);
 
         // Telemetry
+        telemetry.addData("Drive Mode", "FIELD CENTRIC");
+        telemetry.addData(
+                "Heading",
+                "%.1f degrees",
+                drive.getHeadingDegrees()
+        );
+
         telemetry.addData("Intake", intakeOn ? "ON" : "OFF");
         telemetry.addData("Shooter", shooterOn ? "ON" : "OFF");
-        telemetry.addData("Shooter Ready", shooterReady ? "YES" : "SPINNING UP");
+
+        telemetry.addData(
+                "Shooter RPM",
+                "%.0f RPM",
+                shooter.getRPM()
+        );
+
+        telemetry.addData(
+                "Shooter Velocity",
+                "%.0f ticks/sec",
+                shooter.getVelocityTicksPerSecond()
+        );
+
+        telemetry.addData(
+                "Shooter Ready",
+                shooterReady ? "YES" : "SPINNING UP"
+        );
+
         telemetry.addData(
                 "Indexer",
                 gamepad1.x && shooterReady ? "ON" : "OFF"
         );
+
         telemetry.update();
     }
 

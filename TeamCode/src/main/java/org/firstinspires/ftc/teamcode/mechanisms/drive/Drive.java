@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import static org.firstinspires.ftc.teamcode.mechanisms.drive.DriveConstants.DRIVE_SPEED;
@@ -66,12 +67,16 @@ public class Drive {
         );
 
         imu = hwMap.get(IMU.class, "imu");
+
         imu.initialize(new IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
                 )
         ));
+
+        // Set the current robot direction as field heading zero.
+        imu.resetYaw();
 
         double x = WHEEL_OFFSET_X_IN * 0.0254;
         double y = WHEEL_OFFSET_Y_IN * 0.0254;
@@ -100,13 +105,14 @@ public class Drive {
                 -strafe * DRIVE_SPEED,
                 forward * DRIVE_SPEED,
                 rotate * TURN_SPEED,
-                0
+                getHeadingRadians()
         );
     }
 
     public void stop() {
-        mecanumDrive.driveRobotCentric(0.0, 0.0, 0.0, false);
+        mecanumDrive.stop();
     }
+
     public void updateOdometry() {
         double now = System.nanoTime() / 1_000_000_000.0;
         double dt = now - lastTimestamp;
@@ -185,6 +191,10 @@ public class Drive {
     public double getHeadingDegrees() {
         return imu.getRobotYawPitchRollAngles()
                 .getYaw(AngleUnit.DEGREES);
+    }
+
+    public double getHeadingRadians() {
+        return Math.toRadians(getHeadingDegrees());
     }
 
     private Rotation2d getHeadingRotation() {

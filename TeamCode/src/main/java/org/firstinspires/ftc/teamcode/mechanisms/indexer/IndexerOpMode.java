@@ -17,6 +17,7 @@ public class IndexerOpMode extends OpMode {
     @Override
     public void loop() {
         indexer.indexerLoop(gamepad1.x);
+        indexer.updateTelemetry();
         telemetry.update();
     }
 }

@@ -25,8 +25,9 @@ public class Indexer {
         } else {
             windmillServo.setPower(0);
         }
+    }
 
-        telemetry.addData("Indexer Running", on);
+    public void updateTelemetry() {
         telemetry.addData("Indexer Power", windmillServo.getPower());
     }
 }

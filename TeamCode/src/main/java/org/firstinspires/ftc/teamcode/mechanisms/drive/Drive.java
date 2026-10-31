@@ -14,6 +14,8 @@ import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveOdo
 import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 public class Drive {
 
@@ -95,7 +97,7 @@ public class Drive {
 
     public void driveFieldRelative(double forward, double strafe, double rotate) {
         mecanumDrive.driveFieldCentric(
-                -strafe,
+                strafe,
                 forward,
                 rotate,
                 0
@@ -155,6 +157,11 @@ public class Drive {
         );
 
         resetEncoderTracking();
+    }
+
+    public void setPose(Pose3D pose) {
+        Position position = pose.getPosition();
+        setPose(position.x, position.y, pose.getOrientation().getYaw(AngleUnit.DEGREES));
     }
 
     public void resetEncoderTracking() {

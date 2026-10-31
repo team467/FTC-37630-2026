@@ -42,74 +42,14 @@ public class MecanumDriveOpMode extends OpMode {
 
         AprilTagDetection target = vision.getBestDetection();
 
-        if (gamepad1.a) {
-            drive.driveFieldRelative(
-                    gamepad1.left_stick_y,
-                    gamepad1.left_stick_x,
-                    gamepad1.right_stick_x
-            );
+        if (target != null)
+            drive.setPose(target.robotPose);
 
-            telemetry.addData("Mode", "MANUAL");
-
-        } else if (target == null) {
-            drive.driveFieldRelative(0, 0, 0);
-
-            telemetry.addData("Mode", "AUTO: SEARCH");
-            telemetry.addLine("No valid AprilTag detected");
-
-        }
-        else {
-            double bearing = target.ftcPose.bearing;
-            double distance = target.ftcPose.range;
-
-            double rotation = 0.0;
-            double forward = 0.0;
-
-            if (Math.abs(bearing) > BEARING_TOLERANCE_DEG) {
-                rotation = Range.clip(
-                        -ROTATION_KP * bearing,
-                        -MAX_ROTATION,
-                        MAX_ROTATION
-                );
-            }
-
-            if (Math.abs(bearing) <= 8.0
-                    && distance > TARGET_DISTANCE_IN
-                    + DISTANCE_TOLERANCE_IN) {
-
-                forward = Range.clip(
-                        FORWARD_KP
-                                * (distance - TARGET_DISTANCE_IN),
-                        0.0,
-                        MAX_FORWARD
-                );
-            }
-
-            drive.driveFieldRelative(forward, 0, rotation);
-
-            telemetry.addData("Mode", "AUTO: ALIGN");
-
-            if (target instanceof AprilTagSingleDetection) {
-                AprilTagSingleDetection single =
-                        (AprilTagSingleDetection) target;
-
-                telemetry.addData("Tag ID", single.id);
-
-            } else if (target instanceof AprilTagClusterDetection) {
-                AprilTagClusterDetection cluster =
-                        (AprilTagClusterDetection) target;
-
-                telemetry.addData(
-                        "Tag Cluster",
-                        cluster.metadata.name
-                );
-            }
-
-            telemetry.addData("Bearing (deg)", "%.2f", bearing);
-            telemetry.addData("Distance (in)", "%.2f", distance);
-            telemetry.addData("Forward", "%.2f", forward);
-            telemetry.addData("Rotation", "%.2f", rotation);
-        }
+        drive.driveFieldRelative(
+                gamepad1.left_stick_y,
+                gamepad1.left_stick_x,
+                gamepad1.right_stick_x
+        );
 
         telemetry.addData("Odometry pose", drive.getPose());
         telemetry.update();

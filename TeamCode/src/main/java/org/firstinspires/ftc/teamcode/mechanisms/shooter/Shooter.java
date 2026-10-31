@@ -1,28 +1,49 @@
-package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
-import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.CURRENT_LIMIT;
+package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 public class Shooter extends SubsystemBase {
 
-    private Motor shooterMotor;
+    private MotorEx shooterMotor;
 
     public void init(HardwareMap hardwareMap) {
+        shooterMotor = new MotorEx(hardwareMap, "shooterMotor");
 
-        shooterMotor = new Motor(hardwareMap, "shooterMotor");
-        shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
-        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-
+        shooterMotor.setRunMode(Motor.RunMode.RawPower);
+        shooterMotor.setZeroPowerBehavior(
+                Motor.ZeroPowerBehavior.BRAKE
+        );
     }
 
     public void start() {
-        shooterMotor.set(CURRENT_LIMIT);
+        shooterMotor.set(ShooterConstants.CURRENT_LIMIT);
     }
 
     public void stop() {
-        shooterMotor.set(0.0);
+        shooterMotor.stopMotor();
+    }
+
+    // Current encoder velocity in ticks per second.
+    public double getVelocityTicksPerSecond() {
+        return shooterMotor.getVelocity();
+    }
+
+    // Current shooter speed in RPM.
+    public double getRPM() {
+        double ticksPerSecond = Math.abs(
+                shooterMotor.getVelocity()
+        );
+
+        double ticksPerRevolution = shooterMotor.getCPR();
+
+        if (ticksPerRevolution <= 0) {
+            return 0.0;
+        }
+
+        return (ticksPerSecond / ticksPerRevolution) * 60.0;
     }
 }

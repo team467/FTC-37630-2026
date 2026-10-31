@@ -5,12 +5,15 @@ import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.drive.Drive;
 import org.firstinspires.ftc.teamcode.mechanisms.indexer.Indexer;
 import org.firstinspires.ftc.teamcode.mechanisms.intake.Intake;
 import org.firstinspires.ftc.teamcode.mechanisms.shooter.Shooter;
+import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "SuperOpMode", group = "TeleOp")
 public class SuperOpMode extends OpMode {
@@ -19,7 +22,7 @@ public class SuperOpMode extends OpMode {
     private final Indexer indexer = new Indexer();
     private final Shooter shooter = new Shooter();
     private final ElapsedTime shooterTimer = new ElapsedTime();
-
+    private Vision vision;
     private Intake intake;
 
     private boolean intakeOn = false;
@@ -37,6 +40,7 @@ public class SuperOpMode extends OpMode {
         indexer.init(hardwareMap, telemetry);
         shooter.init(hardwareMap);
         intake = new Intake(hardwareMap);
+        vision = new Vision(hardwareMap);
 
         telemetry.addLine("SuperOpMode initialized");
         telemetry.update();
@@ -45,12 +49,19 @@ public class SuperOpMode extends OpMode {
     @Override
     public void loop() {
 
-        // Field-centric driving
-        drive.driveFieldRelative(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x,
-                gamepad1.right_stick_x
-        );
+        AprilTagDetection target = vision.getBestDetection();
+
+        if (target != null) {
+            drive.setPose(target.robotPose);
+        }
+
+            // Field-centric driving
+            drive.driveFieldRelative(
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x,
+                    gamepad1.right_stick_x
+            );
+
 
         // Intake toggle: A
         boolean a = gamepad1.a;

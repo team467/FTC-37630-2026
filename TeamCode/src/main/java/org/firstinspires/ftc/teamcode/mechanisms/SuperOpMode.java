@@ -1,6 +1,8 @@
 
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.TARGET_RPM;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -72,7 +74,7 @@ public class SuperOpMode extends OpMode {
             shooterOn = !shooterOn;
 
             if (shooterOn) {
-                shooter.start();
+                shooter.setVelocityRPM(TARGET_RPM);
                 shooterTimer.reset();
                 shooterTimerStarted = true;
             } else {

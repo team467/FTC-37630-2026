@@ -8,6 +8,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.geometry.Pose2d;
 import com.seattlesolvers.solverslib.geometry.Rotation2d;
@@ -19,7 +20,7 @@ import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveWhe
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class Drive {
+public class Drive extends SubsystemBase {
 
     private static final double WHEEL_RADIUS_IN = 2.04724;
     private static final double TICKS_PER_REV = 28;
@@ -96,6 +97,11 @@ public class Drive {
         resetEncoderTracking();
     }
 
+    @Override
+    public void periodic() {
+        updateOdometry();
+    }
+
     public void driveFieldRelative(
             double forward,
             double strafe,
@@ -116,10 +122,6 @@ public class Drive {
     public void updateOdometry() {
         double now = System.nanoTime() / 1_000_000_000.0;
         double dt = now - lastTimestamp;
-
-        if (dt <= 0.0) {
-            return;
-        }
 
         double frontLeftTicks = frontLeftMotor.getCurrentPosition();
         double frontRightTicks = frontRightMotor.getCurrentPosition();

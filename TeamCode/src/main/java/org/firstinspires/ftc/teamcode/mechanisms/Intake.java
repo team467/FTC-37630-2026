@@ -6,7 +6,7 @@ import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
-public class    Intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
     private Motor intakeMotor;
 
     private CRServo leftIntakeServo;

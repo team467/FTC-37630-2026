@@ -54,6 +54,9 @@ public class Drive {
         backRightMotor = new Motor(hwMap, "backRightMotor");
 
         frontLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+        frontRightMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backRightMotor.setRunMode(Motor.RunMode.VelocityControl);
 
         mecanumDrive = new MecanumDrive(
                 frontLeftMotor,

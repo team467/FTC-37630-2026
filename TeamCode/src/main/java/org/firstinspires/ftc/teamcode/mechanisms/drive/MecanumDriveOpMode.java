@@ -42,7 +42,7 @@ public class MecanumDriveOpMode extends OpMode {
 
         AprilTagDetection target = vision.getBestDetection();
 
-        if (!gamepad1.a) {
+        if (gamepad1.a) {
             drive.driveFieldRelative(
                     gamepad1.left_stick_y,
                     gamepad1.left_stick_x,
@@ -57,7 +57,8 @@ public class MecanumDriveOpMode extends OpMode {
             telemetry.addData("Mode", "AUTO: SEARCH");
             telemetry.addLine("No valid AprilTag detected");
 
-        } else {
+        }
+        else {
             double bearing = target.ftcPose.bearing;
             double distance = target.ftcPose.range;
 

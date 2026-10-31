@@ -17,7 +17,7 @@ public class IntakeOpMode extends OpMode {
 
     @Override
     public void init() {
-        intake = new Intake(hardwareMap);
+        intake = new Intake(hardwareMap, telemetry);
     }
 
     @Override
@@ -51,6 +51,7 @@ public class IntakeOpMode extends OpMode {
 
         telemetry.addData("Motor On", motorOn);
         telemetry.addData("Servos On", servosOn);
+        intake.updateTelemetry();
         telemetry.update();
     }
 }

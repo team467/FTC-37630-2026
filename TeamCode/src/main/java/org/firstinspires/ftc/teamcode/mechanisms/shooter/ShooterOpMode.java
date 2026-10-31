@@ -10,7 +10,7 @@ public class ShooterOpMode extends LinearOpMode {
     public void runOpMode() {
 
         Shooter shooter = new Shooter();
-        shooter.init(hardwareMap);
+        shooter.init(hardwareMap, telemetry);
 
         telemetry.addLine("Shooter initialized");
         telemetry.update();
@@ -24,6 +24,10 @@ public class ShooterOpMode extends LinearOpMode {
             } else {
                 shooter.stop();
             }
+
+            telemetry.addData("Shooter On", gamepad1.right_bumper);
+            shooter.updateTelemetry();
+            telemetry.update();
         }
     }
 }

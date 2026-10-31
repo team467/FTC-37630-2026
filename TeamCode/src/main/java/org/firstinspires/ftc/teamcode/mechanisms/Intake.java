@@ -6,13 +6,18 @@ import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Intake extends SubsystemBase {
     private Motor intakeMotor;
 
     private CRServo leftIntakeServo;
     private ServoEx rightIntakeServo;
+    private Telemetry telemetry;
 
-    public Intake(HardwareMap hardwareMap) {
+    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+
         intakeMotor = new Motor(hardwareMap, IntakeConstants.motorName);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
@@ -36,6 +41,16 @@ public class Intake extends SubsystemBase {
     public void reverseServos() {
         leftIntakeServo.set(IntakeConstants.servoReversePower);
         rightIntakeServo.set(IntakeConstants.rightServoClosedAngle);
+    }
+
+    public void updateTelemetry() {
+        telemetry.addData("Intake Motor Power", intakeMotor.get());
+        telemetry.addData("Intake Motor Raw Power", intakeMotor.getRawPower());
+        telemetry.addData("Intake Motor Position", intakeMotor.getCurrentPosition());
+        telemetry.addData("Intake Motor Velocity", intakeMotor.getRate());
+        telemetry.addData("Left Intake Servo Power", leftIntakeServo.getRawPower());
+        telemetry.addData("Right Intake Servo Angle", rightIntakeServo.get());
+        telemetry.addData("Right Intake Servo Position", rightIntakeServo.getRawPosition());
     }
 
     @Override

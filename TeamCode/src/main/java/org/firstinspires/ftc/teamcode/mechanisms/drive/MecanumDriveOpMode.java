@@ -9,7 +9,7 @@ public class MecanumDriveOpMode extends OpMode {
 
     @Override
     public void init() {
-        drive.init(hardwareMap);
+        drive.init(hardwareMap, telemetry);
     }
 
     @Override
@@ -19,5 +19,8 @@ public class MecanumDriveOpMode extends OpMode {
                 gamepad1.left_stick_x,
                 gamepad1.right_stick_x
         );
+
+        drive.updateTelemetry();
+        telemetry.update();
     }
 }

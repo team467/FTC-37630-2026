@@ -1,7 +1,4 @@
-
 package org.firstinspires.ftc.teamcode.mechanisms.shooter;
-
-import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.TARGET_RPM;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -14,82 +11,79 @@ public class Shooter extends SubsystemBase {
 
     private double targetVelocityTPS = 0;
 
-    // Allowed velocity error (ticks per second)
     private static final double VELOCITY_TOLERANCE = 75;
 
     public void init(HardwareMap hardwareMap) {
-
         shooterMotor = new MotorEx(hardwareMap, "shooterMotor");
 
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
-
-        shooterMotor.setZeroPowerBehavior(
-                Motor.ZeroPowerBehavior.BRAKE
-        );
+        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
 
-    // Set target velocity in ticks per second
-    public void setVelocity(double ticksPerSecond) {
-
-        targetVelocityTPS = Math.abs(ticksPerSecond);
-
-        shooterMotor.setVelocity(TARGET_RPM);
+    // Set target RPM
+    public void shootAtRPM(double rpm) {
+        setVelocityRPM(rpm);
     }
 
-    // Set target speed in motor RPM
+    // Convert RPM into ticks per second
     public void setVelocityRPM(double rpm) {
+        double cpr = shooterMotor.getCPR();
 
-        double ticksPerRevolution = shooterMotor.getCPR();
+        if (cpr <= 0) return;
 
-        if (ticksPerRevolution <= 0) {
-            return;
-        }
-
-        double ticksPerSecond =
-                rpm * ticksPerRevolution / 60.0;
-
-        setVelocity(ticksPerSecond);
+        targetVelocityTPS = Math.abs(rpm) * cpr / 60.0;
     }
 
-    // Read actual encoder velocity
+    // Update the velocity controller continuously
+    public void update() {
+        if (targetVelocityTPS > 0) {
+            shooterMotor.setVelocity(targetVelocityTPS);
+        }
+    }
+
+    public double getRPM() {
+        double cpr = shooterMotor.getCPR();
+
+        if (cpr <= 0) return 0;
+
+        return Math.abs(shooterMotor.getVelocity()) / cpr * 60.0;
+    }
+
+    public boolean isAtTargetVelocity() {
+        if (targetVelocityTPS <= 0) return false;
+
+        return Math.abs(
+                Math.abs(shooterMotor.getVelocity()) - targetVelocityTPS
+        ) <= VELOCITY_TOLERANCE;
+    }
+
+    public double getTargetRPM() {
+        double cpr = shooterMotor.getCPR();
+
+        if (cpr <= 0) return 0;
+
+        return targetVelocityTPS / cpr * 60.0;
+    }
+
+    public double getMotorPower() {
+        return shooterMotor.get();
+    }
+
+    public double getCPR() {
+        return shooterMotor.getCPR();
+    }
+
+    public double getMaxTicksPerSecond() {
+        return shooterMotor.ACHIEVABLE_MAX_TICKS_PER_SECOND;
+    }
+
+    public void stop() {
+        targetVelocityTPS = 0;
+        shooterMotor.stopMotor();
+    }
+
     public double getVelocityTicksPerSecond() {
         return Math.abs(shooterMotor.getVelocity());
     }
 
-    // Convert actual motor velocity to RPM
-    public double getRPM() {
-
-        double ticksPerRevolution = shooterMotor.getCPR();
-
-        if (ticksPerRevolution <= 0) {
-            return 0;
-        }
-
-        return getVelocityTicksPerSecond()
-                / ticksPerRevolution * 60.0;
-    }
-
-    // Check whether shooter reached its target speed
-    public boolean isAtTargetVelocity() {
-
-        if (targetVelocityTPS <= 0) {
-            return false;
-        }
-
-        return Math.abs(
-                getVelocityTicksPerSecond() - targetVelocityTPS
-        ) <= VELOCITY_TOLERANCE;
-    }
-
-    // Stop shooter
-    public void stop() {
-
-        targetVelocityTPS = 0;
-
-        shooterMotor.stopMotor();
-    }
-
-    public double getTargetVelocity() {
-        return targetVelocityTPS;
-    }
 }

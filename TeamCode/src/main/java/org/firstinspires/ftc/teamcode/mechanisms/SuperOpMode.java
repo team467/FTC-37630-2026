@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.drive.Drive;
@@ -22,6 +21,7 @@ public class SuperOpMode extends OpMode {
     private final Indexer indexer = new Indexer();
     private final Shooter shooter = new Shooter();
     private final ElapsedTime shooterTimer = new ElapsedTime();
+
     private Vision vision;
     private Intake intake;
 
@@ -55,13 +55,12 @@ public class SuperOpMode extends OpMode {
             drive.setPose(target.robotPose);
         }
 
-            // Field-centric driving
-            drive.driveFieldRelative(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    gamepad1.right_stick_x
-            );
-
+        // Field-centric driving
+        drive.driveFieldRelative(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x,
+                gamepad1.right_stick_x
+        );
 
         // Intake toggle: A
         boolean a = gamepad1.a;
@@ -82,12 +81,15 @@ public class SuperOpMode extends OpMode {
 
         // Shooter toggle: Right bumper
         if (gamepad1.right_bumper && !lastRightBumper) {
+
             shooterOn = !shooterOn;
 
             if (shooterOn) {
                 shooter.setVelocityRPM(TARGET_RPM);
+
                 shooterTimer.reset();
                 shooterTimerStarted = true;
+
             } else {
                 shooter.stop();
                 shooterTimerStarted = false;
@@ -103,7 +105,8 @@ public class SuperOpMode extends OpMode {
                         && shooterTimer.seconds() >= SHOOTER_SPINUP_SECONDS;
 
         // Indexer: X
-        indexer.indexerLoop(gamepad1.x && shooterReady);
+        //indexer.indexerLoop(gamepad1.x && shooterReady);
+        indexer.indexerLoop(gamepad1.x);
 
         // Telemetry
         telemetry.addData("Drive Mode", "FIELD CENTRIC");

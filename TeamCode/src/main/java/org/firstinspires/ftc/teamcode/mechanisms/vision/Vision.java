@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.mechanisms.vision;
 
 import android.util.Size;
@@ -37,6 +36,7 @@ public final class Vision implements AutoCloseable {
                         )
                 )
                 .setCameraResolution(new Size(640, 480))
+                .enableLiveView(true)
                 .addProcessor(processor)
                 .build();
     }

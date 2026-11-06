@@ -2,6 +2,6 @@ package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
 public class ShooterConstants {
 
-    // 1.0 is max speed
-    public static final double CURRENT_LIMIT = 0.38;
+    // encoder ticks per second
+    public static final double TARGET_RPM = 2000;
 }

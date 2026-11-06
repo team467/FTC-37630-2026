@@ -1,23 +1,29 @@
+
 package org.firstinspires.ftc.teamcode.mechanisms.regression;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.mechanisms.regression.Regression;
 import org.firstinspires.ftc.teamcode.mechanisms.shooter.Shooter;
 
-@TeleOp(name = "Regression Test")
+@TeleOp(name = "Regression Test", group = "Testing")
 public class RegressionOpMode extends OpMode {
 
     private Shooter shooter;
 
-    private double distance = 10;
-    private double targetRPM = 0;
+    private double targetRPM = 1000;
 
+    private boolean shooterOn = false;
+
+    private boolean lastUp;
+    private boolean lastDown;
     private boolean lastLeft;
     private boolean lastRight;
-    private boolean lastA;
-    private boolean lastB;
+    private boolean lastX;
+    private boolean lastY;
+
+    private static final double RPM_STEP = 100;
+    private static final double P_STEP = 0.0001;
 
     @Override
     public void init() {
@@ -28,41 +34,61 @@ public class RegressionOpMode extends OpMode {
     @Override
     public void loop() {
 
-        if (gamepad1.dpad_right && !lastRight) {
-            distance++;
+        // Adjust target RPM
+        if (gamepad1.dpad_up && !lastUp) {
+            targetRPM += RPM_STEP;
         }
 
-        if (gamepad1.dpad_left && !lastLeft) {
-            distance = Math.max(0, distance - 1);
+        if (gamepad1.dpad_down && !lastDown) {
+            targetRPM = Math.max(0, targetRPM - RPM_STEP);
         }
 
-        if (gamepad1.a && !lastA) {
-            targetRPM = Regression.calculateRPM(distance);
+        // Start shooter
+        if (gamepad1.x && !lastX) {
+            shooterOn = true;
             shooter.shootAtRPM(targetRPM);
         }
 
-        if (gamepad1.b && !lastB) {
+        // Stop shooter
+        if (gamepad1.y && !lastY) {
+            shooterOn = false;
             shooter.stop();
-            targetRPM = 0;
         }
 
-        // IMPORTANT: Update velocity controller EVERY loop
-        shooter.update();
+        // Update controller every loop
+        if (shooterOn) {
+            shooter.update();
+        }
 
-        telemetry.addData("Distance", distance);
-        telemetry.addData("Target RPM", targetRPM);
-        telemetry.addData("Actual RPM", shooter.getRPM());
-        telemetry.addData("Motor Power", shooter.getMotorPower());
-        telemetry.addData("CPR", shooter.getCPR());
-        telemetry.addData("Max TPS", shooter.getMaxTicksPerSecond());
-        telemetry.addData("At Target", shooter.isAtTargetVelocity());
+        double actualRPM = shooter.getRPM();
+        double error = targetRPM - actualRPM;
+
+        telemetry.addLine("=== SHOOTER PID TUNING ===");
+
+        telemetry.addData("Target RPM", "%.0f", targetRPM);
+        telemetry.addData("Actual RPM", "%.0f", actualRPM);
+        telemetry.addData("RPM Error", "%.0f", error);
+
+        telemetry.addData("Motor Power", "%.3f",
+                shooter.getMotorPower());
+
+        telemetry.addData("Velocity TPS", "%.1f",
+                shooter.getVelocityTicksPerSecond());
+
+        telemetry.addData("At Target",
+                shooter.isAtTargetVelocity());
+
+        telemetry.addLine("----------------------");
+        telemetry.addData("Shooter", shooterOn ? "ON" : "OFF");
 
         telemetry.update();
 
+        lastUp = gamepad1.dpad_up;
+        lastDown = gamepad1.dpad_down;
         lastLeft = gamepad1.dpad_left;
         lastRight = gamepad1.dpad_right;
-        lastA = gamepad1.a;
-        lastB = gamepad1.b;
+        lastX = gamepad1.x;
+        lastY = gamepad1.y;
     }
 
     @Override
@@ -70,8 +96,3 @@ public class RegressionOpMode extends OpMode {
         shooter.stop();
     }
 }
-
-// D-Pad Left = Decrease distance by 1 inch
-// D-Pad Right = Increase distance by 1 inch
-// A = Calculate RPM
-// B = Stop Shooter

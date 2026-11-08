@@ -32,6 +32,7 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'androidx.datastore:datastore-core:1.3.0'
     implementation "org.solverslib:core:0.3.6" // core
     implementation "org.solverslib:pedroPathing:0.3.6" // pedroPathing
     implementation "org.solverslib:photon:0.3.6" // photon

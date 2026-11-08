@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp (name = "Drive OpMode")
 public class MecanumDriveOpMode extends OpMode {
-    private final Drive drive = new Drive();
+    public final Drive drive = new Drive();
 
     @Override
     public void init() {

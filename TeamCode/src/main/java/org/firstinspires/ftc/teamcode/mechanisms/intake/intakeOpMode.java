@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 
 @TeleOp(name = "Intake OpMode")
  public class intakeOpMode extends LinearOpMode {
+
     Intake2 intake = new Intake2();
     public CRServo ServoSpin;
 

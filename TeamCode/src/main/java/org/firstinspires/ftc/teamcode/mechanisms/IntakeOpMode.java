@@ -1,57 +1,31 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-// ALL Y CODE IS FOR SEPERATING INTAKE TOGGLE AND SERVOS
+import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 @TeleOp(name = "Intake OpMode")
-public class IntakeOpMode extends OpMode {
+public class IntakeOpMode extends CommandOpMode {
     private Intake intake;
-
-    private boolean motorOn = false;
-    private boolean servosOn = false;
-
-    private boolean lastA = false;
-    // private boolean lastY = false;
+    private GamepadEx driverOp;
 
     @Override
-    public void init() {
+    public void initialize() {
         intake = new Intake(hardwareMap, telemetry);
+        driverOp = new GamepadEx(gamepad1);
+
+        driverOp.getGamepadButton(GamepadKeys.Button.A)
+                .toggleWhenPressed(
+                        new InstantCommand(intake::run, intake),
+                        new InstantCommand(intake::stop, intake)
+                );
     }
 
     @Override
-    public void loop() {
-        boolean a = gamepad1.a;
-        // boolean y = gamepad1.y;
-
-        if (a && !lastA) {
-            motorOn = !motorOn;
-            servosOn = !servosOn;
-        }
-
-        /* if (y && !lastY) {
-            servosOn = !servosOn;
-        } */
-
-        lastA = a;
-        // lastY = y;
-
-        if (motorOn) {
-            intake.runMotor();
-        } else {
-            intake.stopMotor();
-        }
-
-        if (servosOn) {
-            intake.runServos();
-        } else {
-            intake.reverseServos();
-        }
-
-        telemetry.addData("Motor On", motorOn);
-        telemetry.addData("Servos On", servosOn);
-        intake.updateTelemetry();
+    public void run() {
+        super.run();
         telemetry.update();
     }
 }

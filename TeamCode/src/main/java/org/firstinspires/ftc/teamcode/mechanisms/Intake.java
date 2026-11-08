@@ -43,7 +43,18 @@ public class Intake extends SubsystemBase {
         rightIntakeServo.set(IntakeConstants.rightServoClosedAngle);
     }
 
-    public void updateTelemetry() {
+    public void run() {
+        runMotor();
+        runServos();
+    }
+
+    public void stop() {
+        stopMotor();
+        reverseServos();
+    }
+
+    @Override
+    public void periodic() {
         telemetry.addData("Intake Motor Power", intakeMotor.get());
         telemetry.addData("Intake Motor Raw Power", intakeMotor.getRawPower());
         telemetry.addData("Intake Motor Position", intakeMotor.getCurrentPosition());
@@ -51,9 +62,5 @@ public class Intake extends SubsystemBase {
         telemetry.addData("Left Intake Servo Power", leftIntakeServo.getRawPower());
         telemetry.addData("Right Intake Servo Angle", rightIntakeServo.get());
         telemetry.addData("Right Intake Servo Position", rightIntakeServo.getRawPosition());
-    }
-
-    @Override
-    public void periodic() {
     }
 }

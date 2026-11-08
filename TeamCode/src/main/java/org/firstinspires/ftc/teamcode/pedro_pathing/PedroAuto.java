@@ -29,11 +29,13 @@ public class PedroAuto extends CommandOpMode {
     private final Pose scorePose = p.of(36, 36, 45);
     private final Pose pickupStartPose = p.of(26, 48, 180);
     private final Pose pickupEndPose = p.of(11, 48, 180);
+    private final Pose parkPose = p.of(15, 108, 90);
 
     private Path goToFirstScore;
     private Path goToPickup;
     private Path grabBalls;
     private Path goToScore;
+    private Path park;
 
     public void buildPaths() {
         goToFirstScore = line(startPose, scorePose)
@@ -47,6 +49,9 @@ public class PedroAuto extends CommandOpMode {
 
         goToScore = line(pickupEndPose, scorePose)
                 .linear(pickupEndPose, scorePose);
+
+        park = line(scorePose, parkPose)
+                .linear(scorePose, parkPose);
     }
 
     private SequentialCommandGroup shootBalls() {
@@ -101,7 +106,9 @@ public class PedroAuto extends CommandOpMode {
                 intakeOff(),
 
                 new FollowPathCommand(follower, goToScore),
-                shootBalls()
+                shootBalls(),
+
+                new FollowPathCommand(follower, park, false)
         );
 
         schedule(autonomousSequence);

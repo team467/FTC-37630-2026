@@ -7,7 +7,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -78,8 +77,7 @@ public class PedroAuto extends CommandOpMode {
     public void initialize() {
         super.reset();
 
-        HardwareMap harRidwareMap = null;
-        shooter = new Shooter(harRidwareMap, telemetry);
+        shooter = new Shooter(hardwareMap, telemetry);
 
         intake = new Intake(hardwareMap, telemetry);
 

@@ -1,29 +1,33 @@
 package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.gamepad.GamepadEx;
-import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 @TeleOp(name = "Shooter OpMode")
-public class ShooterOpMode extends CommandOpMode {
-    private Shooter shooter;
-    private GamepadEx driverOp;
+public class ShooterOpMode extends LinearOpMode {
 
     @Override
-    public void initialize() {
-        shooter = new Shooter(hardwareMap, telemetry);
-        driverOp = new GamepadEx(gamepad1);
+    public void runOpMode() {
 
-        driverOp.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whileHeld(new InstantCommand(shooter::start, shooter))
-                .whenReleased(new InstantCommand(shooter::stop, shooter));
-    }
+        Shooter shooter = new Shooter();
+        shooter.init(hardwareMap, telemetry);
 
-    @Override
-    public void run() {
-        super.run();
+        telemetry.addLine("Shooter initialized");
         telemetry.update();
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            if (gamepad1.right_bumper) {
+                shooter.start();
+            } else {
+                shooter.stop();
+            }
+
+            telemetry.addData("Shooter On", gamepad1.right_bumper);
+            shooter.updateTelemetry();
+            telemetry.update();
+        }
     }
 }

@@ -13,12 +13,13 @@ public class Shooter extends SubsystemBase {
     private Motor shooterMotor;
     private Telemetry telemetry;
 
-    public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
         shooterMotor = new Motor(hardwareMap, "shooterMotor");
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
         shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
     }
 
     public void start() {
@@ -29,8 +30,7 @@ public class Shooter extends SubsystemBase {
         shooterMotor.set(0.0);
     }
 
-    @Override
-    public void periodic() {
+    public void updateTelemetry() {
         telemetry.addData("Shooter Motor Power", shooterMotor.get());
         telemetry.addData("Shooter Motor Raw Power", shooterMotor.getRawPower());
         telemetry.addData("Shooter Motor Position", shooterMotor.getCurrentPosition());

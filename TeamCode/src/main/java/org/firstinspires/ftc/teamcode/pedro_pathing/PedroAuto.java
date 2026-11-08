@@ -56,28 +56,35 @@ public class PedroAuto extends CommandOpMode {
 
     private SequentialCommandGroup shootBalls() {
         return new SequentialCommandGroup(
-                new InstantCommand(shooter::start, shooter),
+                new InstantCommand(() -> shooter.start()),
                 new WaitCommand(1500),
                 new InstantCommand(() -> indexer.indexerLoop(true)),
                 new WaitCommand(2000),
                 new InstantCommand(() -> indexer.indexerLoop(false)),
-                new InstantCommand(shooter::stop, shooter)
+                new InstantCommand(() -> shooter.stop())
         );
     }
 
     private InstantCommand intakeOn() {
-        return new InstantCommand(intake::run, intake);
+        return new InstantCommand(() -> {
+            intake.runMotor();
+            intake.runServos();
+        });
     }
 
     private InstantCommand intakeOff() {
-        return new InstantCommand(intake::stop, intake);
+        return new InstantCommand(() -> {
+            intake.stopMotor();
+            intake.reverseServos();
+        });
     }
 
     @Override
     public void initialize() {
         super.reset();
 
-        shooter = new Shooter(hardwareMap, telemetry);
+        shooter = new Shooter();
+        shooter.init(hardwareMap, telemetry);
 
         intake = new Intake(hardwareMap, telemetry);
 
@@ -116,6 +123,8 @@ public class PedroAuto extends CommandOpMode {
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", follower.pose().heading());
+        shooter.updateTelemetry();
+        intake.updateTelemetry();
         indexer.updateTelemetry();
         telemetry.update();
     }

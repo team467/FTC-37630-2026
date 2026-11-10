@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -56,35 +57,29 @@ public class PedroAuto extends CommandOpMode {
 
     private SequentialCommandGroup shootBalls() {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> shooter.start()),
+                new InstantCommand(shooter::start, shooter),
                 new WaitCommand(1500),
                 new InstantCommand(() -> indexer.indexerLoop(true)),
                 new WaitCommand(2000),
                 new InstantCommand(() -> indexer.indexerLoop(false)),
-                new InstantCommand(() -> shooter.stop())
+                new InstantCommand(shooter::stop, shooter)
         );
     }
 
     private InstantCommand intakeOn() {
-        return new InstantCommand(() -> {
-            intake.runMotor();
-            intake.runServos();
-        });
+        return new InstantCommand(intake::run, intake);
     }
 
     private InstantCommand intakeOff() {
-        return new InstantCommand(() -> {
-            intake.stopMotor();
-            intake.reverseServos();
-        });
+        return new InstantCommand(intake::stop, intake);
     }
 
     @Override
     public void initialize() {
         super.reset();
 
-        shooter = new Shooter();
-        shooter.init(hardwareMap, telemetry);
+        HardwareMap harRidwareMap = null;
+        shooter = new Shooter(harRidwareMap, telemetry);
 
         intake = new Intake(hardwareMap, telemetry);
 
@@ -123,8 +118,6 @@ public class PedroAuto extends CommandOpMode {
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", follower.pose().heading());
-        shooter.updateTelemetry();
-        intake.updateTelemetry();
         indexer.updateTelemetry();
         telemetry.update();
     }

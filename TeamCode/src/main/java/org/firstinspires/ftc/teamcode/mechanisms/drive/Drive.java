@@ -2,40 +2,42 @@ package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class Drive {
-    MecanumDrive mecanumDrive;
-    IMU imu;
-    Telemetry telemetry;
+public class Drive extends SubsystemBase {
+    private MecanumDrive mecanumDrive;
+    private IMU imu;
+    private Telemetry telemetry;
 
-    Motor frontLeftMotor;
-    Motor frontRightMotor;
-    Motor backLeftMotor;
-    Motor backRightMotor;
+    private Motor frontLeftMotor;
+    private Motor frontRightMotor;
+    private Motor backLeftMotor;
+    private Motor backRightMotor;
 
-    public void init(HardwareMap hwMap, Telemetry telemetry) {
+    public Drive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        frontLeftMotor = new Motor(hwMap, "frontLeftMotor");
-        frontRightMotor = new Motor(hwMap, "frontRightMotor");
-        backLeftMotor = new Motor(hwMap, "backLeftMotor");
-        backRightMotor = new Motor(hwMap, "backRightMotor");
+        frontLeftMotor = new Motor(hardwareMap, "frontLeftMotor");
+        frontRightMotor = new Motor(hardwareMap, "frontRightMotor");
+        backLeftMotor = new Motor(hardwareMap, "backLeftMotor");
+        backRightMotor = new Motor(hardwareMap, "backRightMotor");
 
         mecanumDrive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
 
-        imu = hwMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "imu");
     }
 
     public void driveFieldRelative(double forward, double strafe, double rotate) {
         mecanumDrive.driveFieldCentric(strafe, forward, rotate, 0);
     }
 
-    public void updateTelemetry() {
+    @Override
+    public void periodic() {
         telemetry.addData("Front Left Power", frontLeftMotor.get());
         telemetry.addData("Front Left Position", frontLeftMotor.getCurrentPosition());
         telemetry.addData("Front Left Velocity", frontLeftMotor.getRate());

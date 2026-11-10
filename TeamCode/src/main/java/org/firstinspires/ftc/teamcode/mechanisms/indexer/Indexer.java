@@ -1,33 +1,35 @@
-
 package org.firstinspires.ftc.teamcode.mechanisms.indexer;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.CRServo;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Indexer {
+public class Indexer extends SubsystemBase {
 
     private CRServo windmillServo;
     private Telemetry telemetry;
 
     private static final double POWER = 1.0;
 
-    public void init(HardwareMap hwMap, Telemetry telemetry) {
+    public Indexer(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        windmillServo = hwMap.get(CRServo.class, "windmillServo");
-        windmillServo.setPower(0);
+        windmillServo = new CRServo(hardwareMap, "windmillServo");
+        windmillServo.set(0);
     }
 
-    public void indexerLoop(boolean on) {
-        if (on) {
-            windmillServo.setPower(-POWER);
-        } else {
-            windmillServo.setPower(0);
-        }
+    public void start() {
+        windmillServo.set(-POWER);
     }
 
-    public void updateTelemetry() {
-        telemetry.addData("Indexer Power", windmillServo.getPower());
+    public void stop() {
+        windmillServo.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        telemetry.addData("Indexer Power", windmillServo.getRawPower());
     }
 }

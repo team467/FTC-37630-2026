@@ -59,9 +59,9 @@ public class PedroAuto extends CommandOpMode {
         return new SequentialCommandGroup(
                 new InstantCommand(shooter::start, shooter),
                 new WaitCommand(1500),
-                new InstantCommand(() -> indexer.indexerLoop(true)),
+                new InstantCommand(indexer::start, indexer),
                 new WaitCommand(2000),
-                new InstantCommand(() -> indexer.indexerLoop(false)),
+                new InstantCommand(indexer::stop, indexer),
                 new InstantCommand(shooter::stop, shooter)
         );
     }
@@ -83,8 +83,7 @@ public class PedroAuto extends CommandOpMode {
 
         intake = new Intake(hardwareMap, telemetry);
 
-        indexer = new Indexer();
-        indexer.init(hardwareMap, telemetry);
+        indexer = new Indexer(hardwareMap, telemetry);
 
         follower = Pedro_Constants.create(hardwareMap);
         follower.setPose(startPose);
@@ -118,7 +117,6 @@ public class PedroAuto extends CommandOpMode {
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", follower.pose().heading());
-        indexer.updateTelemetry();
         telemetry.update();
     }
 }

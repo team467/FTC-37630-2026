@@ -2,11 +2,20 @@ package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
+import com.seattlesolvers.solverslib.geometry.Pose2d;
+import com.seattlesolvers.solverslib.geometry.Rotation2d;
+import com.seattlesolvers.solverslib.geometry.Translation2d;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveKinematics;
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveOdometry;
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 public class Drive {
     MecanumDrive mecanumDrive;
@@ -28,7 +37,32 @@ public class Drive {
 
         mecanumDrive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
 
+        //mecanumDrive.setRightSideInverted(!RIGHT_MOTORS_IDENTICAL_WIRING);
+
         imu = hwMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                )
+        ));
+
+        double x = WHEEL_OFFSET_X_IN * 0.0254;
+        double y = WHEEL_OFFSET_Y_IN * 0.0254;
+
+        kinematics = new MecanumDriveKinematics(
+                new Translation2d(x, y),
+                new Translation2d(x, -y),
+                new Translation2d(-x, y),
+                new Translation2d(-x, -y)
+        );
+
+        odometry = new MecanumDriveOdometry(
+                kinematics,
+                getHeadingRotation()
+        );
+
+        resetEncoderTracking();
     }
 
     public void driveFieldRelative(double forward, double strafe, double rotate) {

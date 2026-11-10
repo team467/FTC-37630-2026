@@ -21,7 +21,8 @@ public class Indexer extends SubsystemBase {
     }
 
     public void start() {
-        windmillServo.set(-POWER);
+        final double v = -POWER;
+        (-POWER)
     }
 
     public void stop() {

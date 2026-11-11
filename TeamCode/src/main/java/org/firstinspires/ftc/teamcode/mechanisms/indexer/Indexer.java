@@ -10,7 +10,7 @@ public class Indexer {
     private CRServo windmillServo;
     private Telemetry telemetry;
 
-    private static final double POWER = 1.0;
+    private static final double POWER = -1.0;
 
     public void init(HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -21,7 +21,7 @@ public class Indexer {
 
     public void indexerLoop(boolean on) {
         if (on) {
-            windmillServo.setPower(-POWER);
+            windmillServo.setPower(POWER);
         } else {
             windmillServo.setPower(0);
         }

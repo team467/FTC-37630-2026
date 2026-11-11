@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.drive.Drive;
 import org.firstinspires.ftc.teamcode.mechanisms.indexer.Indexer;
@@ -14,13 +13,12 @@ import org.firstinspires.ftc.teamcode.mechanisms.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@TeleOp(name = "SuperOpMode", group = "TeleOp")
+@TeleOp (name = "Orchestrator")
 public class SuperOpMode extends OpMode {
 
     private final Drive drive = new Drive();
     private final Indexer indexer = new Indexer();
     private final Shooter shooter = new Shooter();
-    private final ElapsedTime shooterTimer = new ElapsedTime();
 
     private Vision vision;
     private Intake intake;
@@ -30,15 +28,15 @@ public class SuperOpMode extends OpMode {
 
     private boolean shooterOn = false;
     private boolean lastRightBumper = false;
-    private boolean shooterTimerStarted = false;
 
-    private static final double SHOOTER_SPINUP_SECONDS = 0.5;
+    private static final double SHOOTER_TOLERANCE_RPM = 75;
 
     @Override
     public void init() {
         drive.init(hardwareMap);
         indexer.init(hardwareMap, telemetry);
         shooter.init(hardwareMap);
+
         intake = new Intake(hardwareMap);
         vision = new Vision(hardwareMap);
 
@@ -49,6 +47,7 @@ public class SuperOpMode extends OpMode {
     @Override
     public void loop() {
 
+        // Vision
         AprilTagDetection target = vision.getBestDetection();
 
         if (target != null) {
@@ -62,14 +61,12 @@ public class SuperOpMode extends OpMode {
                 gamepad1.right_stick_x
         );
 
-        // Intake toggle: A
-        boolean a = gamepad1.a;
-
-        if (a && !lastA) {
+        // Intake toggle (press detection)
+        if (gamepad1.a && !lastA) {
             intakeOn = !intakeOn;
         }
 
-        lastA = a;
+        lastA = gamepad1.a;
 
         if (intakeOn) {
             intake.runMotor();
@@ -79,37 +76,40 @@ public class SuperOpMode extends OpMode {
             intake.stopServos();
         }
 
-        // Shooter toggle: Right bumper
-        if (gamepad1.right_bumper && !lastRightBumper) {
-
+        // Shooter toggle (press detection)
+        if (gamepad1.right_bumper) {
             shooterOn = !shooterOn;
 
             if (shooterOn) {
-                shooter.setVelocityRPM(TARGET_RPM);
-
-                shooterTimer.reset();
-                shooterTimerStarted = true;
-
+                shooter.shootAtRPM(TARGET_RPM);
             } else {
                 shooter.stop();
-                shooterTimerStarted = false;
             }
         }
 
+        if (shooterOn) {
+            shooter.update();
+        }
+
+
         lastRightBumper = gamepad1.right_bumper;
 
-        // Shooter spin-up delay
-        boolean shooterReady =
-                shooterOn
-                        && shooterTimerStarted
-                        && shooterTimer.seconds() >= SHOOTER_SPINUP_SECONDS;
+        // Shooter readiness
+        double currentRPM = shooter.getRPM();
 
-        // Indexer: X
-        //indexer.indexerLoop(gamepad1.x && shooterReady);
-        indexer.indexerLoop(gamepad1.x);
+        boolean shooterReady =
+                shooterOn &&
+                        Math.abs(currentRPM - TARGET_RPM) <= SHOOTER_TOLERANCE_RPM;
+
+        // Indexer: manual control OR automatic feeding
+        boolean indexerOn = gamepad1.left_bumper || shooterReady;
+
+        // Only ONE indexer command per loop
+        indexer.indexerLoop(indexerOn);
 
         // Telemetry
         telemetry.addData("Drive Mode", "FIELD CENTRIC");
+
         telemetry.addData(
                 "Heading",
                 "%.1f degrees",
@@ -118,12 +118,10 @@ public class SuperOpMode extends OpMode {
 
         telemetry.addData("Intake", intakeOn ? "ON" : "OFF");
         telemetry.addData("Shooter", shooterOn ? "ON" : "OFF");
+        telemetry.addData("Shooter Ready", shooterReady);
+        telemetry.addData("Indexer", indexerOn ? "ON" : "OFF");
 
-        telemetry.addData(
-                "Shooter RPM",
-                "%.0f RPM",
-                shooter.getRPM()
-        );
+        telemetry.addData("Shooter RPM", "%.0f RPM", currentRPM);
 
         telemetry.addData(
                 "Shooter Velocity",
@@ -131,15 +129,7 @@ public class SuperOpMode extends OpMode {
                 shooter.getVelocityTicksPerSecond()
         );
 
-        telemetry.addData(
-                "Shooter Ready",
-                shooterReady ? "YES" : "SPINNING UP"
-        );
-
-        telemetry.addData(
-                "Indexer",
-                gamepad1.x && shooterReady ? "ON" : "OFF"
-        );
+        telemetry.addData("Pose", drive.getPose());
 
         telemetry.update();
     }

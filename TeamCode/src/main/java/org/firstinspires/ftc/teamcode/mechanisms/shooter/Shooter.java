@@ -8,16 +8,18 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 public class Shooter extends SubsystemBase {
 
     private MotorEx shooterMotor;
-
     private double targetVelocityTPS = 0;
 
     private static final double VELOCITY_TOLERANCE = 75;
+    private static final double GEAR_RATIO = 19.2;
 
     public void init(HardwareMap hardwareMap) {
         shooterMotor = new MotorEx(hardwareMap, "shooterMotor");
 
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
-        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        shooterMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        shooterMotor.setVeloCoefficients(1.1, 0, 0);
+//        shooterMotor.setFeedforwardCoefficients();
     }
 
     // Set target RPM
@@ -31,7 +33,7 @@ public class Shooter extends SubsystemBase {
 
         if (cpr <= 0) return;
 
-        targetVelocityTPS = Math.abs(rpm) * cpr / 60.0;
+        targetVelocityTPS = (Math.abs(rpm) * cpr / 60.0) * 11/10;
     }
 
     // Update the velocity controller continuously
@@ -46,7 +48,9 @@ public class Shooter extends SubsystemBase {
 
         if (cpr <= 0) return 0;
 
-        return Math.abs(shooterMotor.getVelocity()) / cpr * 60.0;
+        // return Math.abs(shooterMotor.getVelocity()) / cpr * 60.0;
+        return shooterMotor.getVelocity() / cpr * 60.0;
+
     }
 
     public boolean isAtTargetVelocity() {
@@ -62,7 +66,8 @@ public class Shooter extends SubsystemBase {
 
         if (cpr <= 0) return 0;
 
-        return targetVelocityTPS / cpr * 60.0;
+        return targetVelocityTPS / cpr / 60.0;
+
     }
 
     public double getMotorPower() {

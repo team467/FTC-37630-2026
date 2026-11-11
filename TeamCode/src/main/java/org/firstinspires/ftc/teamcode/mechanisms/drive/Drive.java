@@ -26,7 +26,7 @@ public class Drive extends SubsystemBase {
 
     private static final double WHEEL_RADIUS_IN = 2.04724;
     private static final double TICKS_PER_REV = 28;
-    private static final double GEAR_RATIO = 19;
+    private static final double GEAR_RATIO = 19.2;
     private static final double WHEEL_OFFSET_X_IN = 4.961;
     private static final double WHEEL_OFFSET_Y_IN = 9.670705;
     private static final boolean RIGHT_MOTORS_IDENTICAL_WIRING = true;
@@ -61,6 +61,14 @@ public class Drive extends SubsystemBase {
         backRightMotor = new Motor(hwMap, "backRightMotor");
 
         frontLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+        frontRightMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backRightMotor.setRunMode(Motor.RunMode.VelocityControl);
+
+        frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         mecanumDrive = new MecanumDrive(
                 frontLeftMotor,
@@ -112,7 +120,7 @@ public class Drive extends SubsystemBase {
         mecanumDrive.driveFieldCentric(
                 -strafe * DRIVE_SPEED,
                 forward * DRIVE_SPEED,
-                rotate * TURN_SPEED,
+                -rotate * TURN_SPEED,
                 getHeadingRadians()
         );
     }

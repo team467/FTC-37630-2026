@@ -77,6 +77,8 @@ public class Drive extends SubsystemBase {
                 backRightMotor
         );
 
+        //mecanumDrive.setRightSideInverted(!RIGHT_MOTORS_IDENTICAL_WIRING);
+
         imu = hwMap.get(IMU.class, "imu");
 
         imu.initialize(new IMU.Parameters(

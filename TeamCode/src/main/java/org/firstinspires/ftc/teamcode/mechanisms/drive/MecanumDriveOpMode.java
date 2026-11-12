@@ -3,12 +3,9 @@ package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 
 @TeleOp(name = "Drive + Vision")
 public class MecanumDriveOpMode extends OpMode {
@@ -46,8 +43,8 @@ public class MecanumDriveOpMode extends OpMode {
             drive.setPose(target.robotPose);
 
         drive.driveFieldRelative(
-                gamepad1.left_stick_y,
-                gamepad1.left_stick_x,
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x,
                 gamepad1.right_stick_x
         );
 

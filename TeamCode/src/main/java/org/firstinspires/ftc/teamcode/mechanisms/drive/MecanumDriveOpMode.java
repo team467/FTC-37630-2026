@@ -3,12 +3,9 @@ package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 
 @TeleOp(name = "Drive + Vision")
 public class MecanumDriveOpMode extends OpMode {

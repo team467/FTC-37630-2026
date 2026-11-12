@@ -1,9 +1,6 @@
 
-package org.firstinspires.ftc.teamcode.mechanisms.regression;
+package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.TARGET_RPM;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.mechanisms.drive.Drive;
 import org.firstinspires.ftc.teamcode.mechanisms.indexer.Indexer;
 import org.firstinspires.ftc.teamcode.mechanisms.intake.Intake;
-import org.firstinspires.ftc.teamcode.mechanisms.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.mechanisms.vision.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -65,9 +61,6 @@ public class RegressionOpMode extends OpMode {
 
         drive.init(hardwareMap);
         indexer.init(hardwareMap, telemetry);
-
-        // Existing second initialization retained from your code
-        shooter.init(hardwareMap);
 
         intake = new Intake(hardwareMap);
 

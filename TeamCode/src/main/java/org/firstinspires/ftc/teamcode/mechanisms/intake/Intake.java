@@ -42,7 +42,4 @@ public class Intake extends SubsystemBase {
         rightIntakeServo.set(IntakeConstants.servoReversePower);
     }
 
-    @Override
-    public void periodic() {
-    }
 }

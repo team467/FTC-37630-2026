@@ -117,12 +117,17 @@ public class Drive extends SubsystemBase {
             double strafe,
             double rotate
     ) {
+    
+    forward = -forward;
+    strafe = -strafe;
+
+    {
         mecanumDrive.driveFieldCentric(
                 -strafe * DRIVE_SPEED,
                 forward * DRIVE_SPEED,
                 -rotate * TURN_SPEED,
                 getHeadingRadians()
-        );
+        );}
     }
 
     public void stop() {

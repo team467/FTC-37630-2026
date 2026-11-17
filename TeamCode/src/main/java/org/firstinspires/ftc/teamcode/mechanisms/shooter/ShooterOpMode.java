@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanisms.shooter;
 
+import static org.firstinspires.ftc.teamcode.mechanisms.shooter.ShooterConstants.TARGET_RPM;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,7 +22,7 @@ public class ShooterOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.right_bumper) {
-                shooter.start();
+                shooter.setVelocityRPM(TARGET_RPM);
             } else {
                 shooter.stop();
             }

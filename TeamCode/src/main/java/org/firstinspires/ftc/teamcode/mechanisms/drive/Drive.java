@@ -54,6 +54,17 @@ public class Drive {
         backRightMotor = new Motor(hwMap, "backRightMotor");
 
         frontLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+<<<<<<< Updated upstream
+=======
+        frontRightMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
+        backRightMotor.setRunMode(Motor.RunMode.VelocityControl);
+
+        frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+>>>>>>> Stashed changes
 
         mecanumDrive = new MecanumDrive(
                 frontLeftMotor,
@@ -90,6 +101,7 @@ public class Drive {
         resetEncoderTracking();
     }
 
+<<<<<<< Updated upstream
     public void driveFieldRelative(double forward, double strafe, double rotate) {
         mecanumDrive.driveFieldCentric(
                 -strafe,
@@ -97,6 +109,28 @@ public class Drive {
                 rotate,
                 0
         );
+=======
+    @Override
+    public void periodic() {
+        updateOdometry();
+    }
+
+    public void driveFieldRelative(
+            double forward,
+            double strafe,
+            double rotate
+    ) {
+        mecanumDrive.driveFieldCentric(
+                strafe * DRIVE_SPEED,
+                -forward * DRIVE_SPEED,
+                -rotate * TURN_SPEED,
+                getHeadingDegrees()
+        );
+    }
+
+    public void stop() {
+        mecanumDrive.stop();
+>>>>>>> Stashed changes
     }
 
     public void updateOdometry() {
@@ -167,9 +201,17 @@ public class Drive {
         lastTimestamp = System.nanoTime() / 1_000_000_000.0;
     }
 
+<<<<<<< Updated upstream
     private double getHeadingDegrees() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
+=======
+    public double getHeadingDegrees() {
+        return imu.getRobotYawPitchRollAngles()
+                .getYaw(AngleUnit.DEGREES);
+    }
+
+>>>>>>> Stashed changes
 
     private Rotation2d getHeadingRotation() {
         return Rotation2d.fromDegrees(getHeadingDegrees());

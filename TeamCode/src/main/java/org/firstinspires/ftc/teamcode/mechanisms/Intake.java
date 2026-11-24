@@ -43,6 +43,12 @@ public class Intake extends SubsystemBase {
         rightIntakeServo.set(IntakeConstants.rightServoClosedAngle);
     }
 
+    // CHANGED: new method so the CR servo actually stops
+    public void stopServos() {
+        leftIntakeServo.set(0);
+        rightIntakeServo.set(IntakeConstants.rightServoClosedAngle);
+    }
+
     public void run() {
         runMotor();
         runServos();
@@ -50,7 +56,7 @@ public class Intake extends SubsystemBase {
 
     public void stop() {
         stopMotor();
-        reverseServos();
+        stopServos(); // CHANGED: was reverseServos(). Put it back if you want it to spin backward on stop.
     }
 
     @Override

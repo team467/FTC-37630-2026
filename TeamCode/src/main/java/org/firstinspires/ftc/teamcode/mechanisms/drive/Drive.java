@@ -209,4 +209,8 @@ public class Drive extends SubsystemBase {
     private Rotation2d getHeadingRotation() {
         return Rotation2d.fromDegrees(getHeadingDegrees());
     }
+
+    public void stop() {
+
+    }
 }

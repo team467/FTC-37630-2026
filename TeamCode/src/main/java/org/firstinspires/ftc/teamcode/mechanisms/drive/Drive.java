@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
 import static org.firstinspires.ftc.teamcode.mechanisms.drive.DriveConstants.DRIVE_SPEED;
@@ -66,7 +65,7 @@ public class Drive extends SubsystemBase {
         backRightMotor.setRunMode(Motor.RunMode.VelocityControl);
 
         frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
@@ -76,8 +75,6 @@ public class Drive extends SubsystemBase {
                 backLeftMotor,
                 backRightMotor
         );
-
-        //mecanumDrive.setRightSideInverted(!RIGHT_MOTORS_IDENTICAL_WIRING);
 
         imu = hwMap.get(IMU.class, "imu");
 
@@ -119,17 +116,15 @@ public class Drive extends SubsystemBase {
             double strafe,
             double rotate
     ) {
-    
-    forward = -forward;
-    strafe = -strafe;
+        forward = -forward;
+        strafe = -strafe;
 
-    {
         mecanumDrive.driveFieldCentric(
                 -strafe * DRIVE_SPEED,
                 forward * DRIVE_SPEED,
                 -rotate * TURN_SPEED,
-                getHeadingRadians()
-        );}
+                getHeadingDegrees()
+        );
     }
 
     public void stop() {
@@ -139,6 +134,10 @@ public class Drive extends SubsystemBase {
     public void updateOdometry() {
         double now = System.nanoTime() / 1_000_000_000.0;
         double dt = now - lastTimestamp;
+
+        if (dt <= 0.0) {
+            return;
+        }
 
         double frontLeftTicks = frontLeftMotor.getCurrentPosition();
         double frontRightTicks = frontRightMotor.getCurrentPosition();
@@ -156,15 +155,12 @@ public class Drive extends SubsystemBase {
         lastBackRightTicks = backRightTicks;
         lastTimestamp = now;
 
-        MecanumDriveWheelSpeeds wheelSpeeds =
-                new MecanumDriveWheelSpeeds(
-                        frontLeftDelta * METERS_PER_TICK / dt,
-                        frontRightDelta * METERS_PER_TICK
-                                * RIGHT_ENCODER_SIGN / dt,
-                        backLeftDelta * METERS_PER_TICK / dt,
-                        backRightDelta * METERS_PER_TICK
-                                * RIGHT_ENCODER_SIGN / dt
-                );
+        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(
+                frontLeftDelta * METERS_PER_TICK / dt,
+                frontRightDelta * METERS_PER_TICK * RIGHT_ENCODER_SIGN / dt,
+                backLeftDelta * METERS_PER_TICK / dt,
+                backRightDelta * METERS_PER_TICK * RIGHT_ENCODER_SIGN / dt
+        );
 
         odometry.updateWithTime(
                 now,
@@ -177,11 +173,7 @@ public class Drive extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    public void setPose(
-            double xMeters,
-            double yMeters,
-            double headingDegrees
-    ) {
+    public void setPose(double xMeters, double yMeters, double headingDegrees) {
         odometry.resetPosition(
                 new Pose2d(
                         xMeters,

@@ -1,0 +1,14 @@
+package org.firstinspires.ftc.teamcode.mechanisms.Turret;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
+
+public class Turret {
+    private MotorEx shooterMotor;
+    private MotorEx turretMotor;
+
+    public Turret(HardwareMap hardwareMap) {
+        shooterMotor = new MotorEx(hardwareMap, "motorEx");
+        # Stopped here.
+    }
+}

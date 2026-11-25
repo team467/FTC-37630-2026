@@ -79,6 +79,16 @@ public final class Vision implements AutoCloseable {
         return detection.ftcPose.range;
     }
 
+    public double getHiveAngle() {
+        AprilTagDetection detection = getBestDetection();
+
+        if (detection == null) {
+            return -1;
+        }
+
+        return detection.ftcPose.bearing;
+    }
+    
     @Override
     public void close() {
         portal.close();

@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.mechanisms.drive;
 
+import static org.firstinspires.ftc.teamcode.mechanisms.drive.DriveConstants.DRIVE_SPEED;
+import static org.firstinspires.ftc.teamcode.mechanisms.drive.DriveConstants.TURN_SPEED;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.geometry.Pose2d;
 import com.seattlesolvers.solverslib.geometry.Rotation2d;
@@ -14,12 +18,14 @@ import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveOdo
 import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
-public class Drive {
+public class Drive extends SubsystemBase {
 
     private static final double WHEEL_RADIUS_IN = 2.04724;
     private static final double TICKS_PER_REV = 28;
-    private static final double GEAR_RATIO = 19;
+    private static final double GEAR_RATIO = 19.2;
     private static final double WHEEL_OFFSET_X_IN = 4.961;
     private static final double WHEEL_OFFSET_Y_IN = 9.670705;
     private static final boolean RIGHT_MOTORS_IDENTICAL_WIRING = true;
@@ -54,8 +60,6 @@ public class Drive {
         backRightMotor = new Motor(hwMap, "backRightMotor");
 
         frontLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
-<<<<<<< Updated upstream
-=======
         frontRightMotor.setRunMode(Motor.RunMode.VelocityControl);
         backLeftMotor.setRunMode(Motor.RunMode.VelocityControl);
         backRightMotor.setRunMode(Motor.RunMode.VelocityControl);
@@ -64,7 +68,6 @@ public class Drive {
         frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
->>>>>>> Stashed changes
 
         mecanumDrive = new MecanumDrive(
                 frontLeftMotor,
@@ -73,15 +76,17 @@ public class Drive {
                 backRightMotor
         );
 
-        //mecanumDrive.setRightSideInverted(!RIGHT_MOTORS_IDENTICAL_WIRING);
-
         imu = hwMap.get(IMU.class, "imu");
+
         imu.initialize(new IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
                 )
         ));
+
+        // Set the current robot direction as field heading zero.
+        imu.resetYaw();
 
         double x = WHEEL_OFFSET_X_IN * 0.0254;
         double y = WHEEL_OFFSET_Y_IN * 0.0254;
@@ -101,15 +106,6 @@ public class Drive {
         resetEncoderTracking();
     }
 
-<<<<<<< Updated upstream
-    public void driveFieldRelative(double forward, double strafe, double rotate) {
-        mecanumDrive.driveFieldCentric(
-                -strafe,
-                forward,
-                rotate,
-                0
-        );
-=======
     @Override
     public void periodic() {
         updateOdometry();
@@ -120,9 +116,12 @@ public class Drive {
             double strafe,
             double rotate
     ) {
+        forward = -forward;
+        strafe = -strafe;
+
         mecanumDrive.driveFieldCentric(
-                strafe * DRIVE_SPEED,
-                -forward * DRIVE_SPEED,
+                -strafe * DRIVE_SPEED,
+                forward * DRIVE_SPEED,
                 -rotate * TURN_SPEED,
                 getHeadingDegrees()
         );
@@ -130,7 +129,6 @@ public class Drive {
 
     public void stop() {
         mecanumDrive.stop();
->>>>>>> Stashed changes
     }
 
     public void updateOdometry() {
@@ -188,6 +186,11 @@ public class Drive {
         resetEncoderTracking();
     }
 
+    public void setPose(Pose3D pose) {
+        Position position = pose.getPosition();
+        setPose(position.x, position.y, pose.getOrientation().getYaw(AngleUnit.DEGREES));
+    }
+
     public void resetEncoderTracking() {
         frontLeftMotor.resetEncoder();
         frontRightMotor.resetEncoder();
@@ -201,17 +204,14 @@ public class Drive {
         lastTimestamp = System.nanoTime() / 1_000_000_000.0;
     }
 
-<<<<<<< Updated upstream
-    private double getHeadingDegrees() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-    }
-=======
     public double getHeadingDegrees() {
         return imu.getRobotYawPitchRollAngles()
                 .getYaw(AngleUnit.DEGREES);
     }
 
->>>>>>> Stashed changes
+    public double getHeadingRadians() {
+        return Math.toRadians(getHeadingDegrees());
+    }
 
     private Rotation2d getHeadingRotation() {
         return Rotation2d.fromDegrees(getHeadingDegrees());

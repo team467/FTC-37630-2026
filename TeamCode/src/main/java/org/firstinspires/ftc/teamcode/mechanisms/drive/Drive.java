@@ -54,4 +54,8 @@ public class Drive {
 
         telemetry.addData("Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
     }
+
+    public void stop() {
+
+    }
 }

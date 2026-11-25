@@ -14,6 +14,7 @@ public class IndexerOpMode extends CommandOpMode {
     @Override
     public void initialize() {
         indexer = new Indexer(hardwareMap, telemetry);
+        register(indexer);
         driverOp = new GamepadEx(gamepad1);
 
         driverOp.getGamepadButton(GamepadKeys.Button.X)
